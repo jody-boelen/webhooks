@@ -1,4 +1,4 @@
-# Webhooks
+# Webhook Producer
 The webhooks module allows you to easily add webhooks to your Mendix application. It contains a reference REST service (excluded document) that has all the endpoints you need to enable webhooks in your app. Furthermore, it has actions that you can use to send the webhooks asynchronously using the task queue. See the how-to section for a more detailed explanation.
 
 ## Features and limitations
