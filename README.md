@@ -22,7 +22,8 @@ The webhooks module allows you to easily add webhooks to your Mendix application
 3. Make sure the encryption key constant is filled
 4. Include the webhook PRS (PRS_Webhook_Example) or use this as a basis for your own implementation.
 5. If you use PRS_Webhook_Example, give the API_User access to the APIUser module role.
-6. You are ready to use the module.
+6. Set the ChallengeHeaderName constant, this will be used to verify the webhook (see webhook lifecycle).
+7. You are ready to use the module.
 
 ## How to use the module
 
@@ -36,3 +37,27 @@ After configuration, you can use the module to send notifications via a webhook 
 - SUB_Webhook_SendCallout: This microflow will actually send the callouts. The callouts are all sent asynchronously.
 
 #### Webhook lifecycle
+The module supports a webhook lifecycle that includes registering, updating, verifying, activating and deactivating. This section briefly covers all and might be a good reference for consumers of the webhook REST service.
+
+##### Registering a webhook
+To register a webhook, you need to provide a url that will eventually receive the callouts. Furthermore, you can add the optional Authorization object, this object holds the credentials that are required to call the url you provided. There are 3 options:
+- Basic: Use this if your url requires basic username/password authorization.
+- Custom: Use this if your url requires a custom header to authorize.
+- ClientCredentials: Use this if you url requires a bearer token as authorization.
+
+##### Verifying a webhook
+After registering a webhook, the webhook will be unverified, which means that the url provided in the initial creation call is not verified yet. For security reasons, a verification step is required that checks whether you actually own the url you provided. Only after verification will you receive callouts to that webhook url. The verification will happen as follows:
+- The client calls the verify endpoint.
+- The verify endpoint will perform a GET call to the webhook url (as oppossed to the normal POST call for callouts). This GET call includes a custom header with a secret (e.g. X-SampleImplementation-Challenge). This challenge header should be determined when implementing the webhook module.
+- The client needs to respond to that GET call with a 200 OK and a JSON body that contains the secret of the challenge header:
+  {"Verification": "ValueFromTheChallengeHeader"}
+When this process is completed, the webhook is set to Active and it is ready to receive notifications.
+
+##### Updating a webhook
+The PATCH endpoint allows for updating the webhook. Note that all potentially breaking changes will change the webhook status to Unverified. This means that you will need to verify the webhook again after PATCHing in some cases.
+
+##### (De)activating a webhook
+To temporarily stop receiving notifications, you can deactive a webhook via the /deactivate endpoint. If you want to receive notifications again, you can activate it without the need for verification via the /activate endpoint.
+
+  
+
