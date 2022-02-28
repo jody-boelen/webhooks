@@ -1,0 +1,542 @@
+swagger: "2.0"
+info:
+  description: "This is reference documentation for the webhooks marketplace module."
+  version: "1.0.0"
+  title: "Webhooks"
+  contact:
+    email: "jody.boelen@mendix.com"
+tags:
+- name: "webhooks"
+  description: "Manage webhooks"
+- name: "webhook lifecycle"
+  description: "Manage the lifecycle of a webhook"
+schemes:
+- "https"
+paths:
+  /webhooks:
+    post:
+      tags:
+      - "webhooks"
+      summary: "Create a new webhook"
+      operationId: "addWebhook"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "webhook"
+        description: "Webhook object that needs to be created"
+        required: true
+        schema:
+          $ref: "#/definitions/WebhookInput"
+      responses:
+        "201":
+          description: "Created"
+          schema:
+            $ref: "#/definitions/Webhook"
+        "400":
+          description: "Client Error"
+          schema:
+            $ref: "#/definitions/ClientError"
+        "500":
+          description: "Internal Error"
+          schema:
+            $ref: "#/definitions/InternalError"
+      security:
+        - OAuth2: []
+        - userNamePassWord: []
+    get:
+      tags:
+      - "webhooks"
+      summary: "Get all your webhooks"
+      operationId: "getWebhooks"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Webhooks"
+        "400":
+          description: "Client Error"
+          schema:
+            $ref: "#/definitions/ClientError"
+        "500":
+          description: "Internal Error"
+          schema:
+            $ref: "#/definitions/InternalError"
+      security:
+        - OAuth2: []
+        - userNamePassWord: []
+  /webhooks/{webhook-id}:
+    get:
+      tags:
+      - "webhooks"
+      summary: "Get a webhook"
+      operationId: "getWebhook"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: path
+        name: webhook-id
+        description: "id of the webhook you want to retrieve."
+        required: true
+        type: string
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Webhook"
+        "400":
+          description: "Client Error"
+          schema:
+            $ref: "#/definitions/ClientError"
+        "500":
+          description: "Internal Error"
+          schema:
+            $ref: "#/definitions/InternalError"
+      security:
+        - OAuth2: []
+        - userNamePassWord: []
+    patch:
+      tags:
+      - "webhooks"
+      summary: "Update an existing webhook"
+      operationId: "updateWebhook"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Webhook object that needs to be modified"
+        required: true
+        schema:
+          $ref: "#/definitions/WebhookInput"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Webhook"
+        "400":
+          description: "Client Error"
+          schema:
+            $ref: "#/definitions/ClientError"
+        "500":
+          description: "Internal Error"
+          schema:
+            $ref: "#/definitions/InternalError"
+      security:
+        - OAuth2: []
+        - userNamePassWord: []
+    delete:
+      tags:
+      - "webhooks"
+      summary: "Delete a webhook"
+      operationId: "deleteWebhook"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: path
+        name: webhook-id
+        description: "id of the webhook you want to delete."
+        required: true
+        type: string
+      responses:
+        "204":
+          description: "No Content"
+        "400":
+          description: "Client Error"
+          schema:
+            $ref: "#/definitions/ClientError"
+        "500":
+          description: "Internal Error"
+          schema:
+            $ref: "#/definitions/InternalError"
+      security:
+        - OAuth2: []
+        - userNamePassWord: []
+  /webhooks/{webhook-id}/verify:
+    post:
+      tags:
+      - "webhook lifecycle"
+      summary: "Verify a webhook"
+      operationId: "verifyWebhook"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: path
+        name: webhook-id
+        description: "id of the webhook you want to verify."
+        required: true
+        type: string
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Webhook"
+        "400":
+          description: "Client Error"
+          schema:
+            $ref: "#/definitions/ClientError"
+        "500":
+          description: "Internal Error"
+          schema:
+            $ref: "#/definitions/InternalError"
+      security:
+        - OAuth2: []
+        - userNamePassWord: []
+  /webhooks/{webhook-id}/activate:
+    post:
+      tags:
+      - "webhook lifecycle"
+      summary: "Activate a webhook"
+      operationId: "activateWebhook"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: path
+        name: webhook-id
+        description: "id of the webhook you want to activate."
+        required: true
+        type: string
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Webhook"
+        "400":
+          description: "Client Error"
+          schema:
+            $ref: "#/definitions/ClientError"
+        "500":
+          description: "Internal Error"
+          schema:
+            $ref: "#/definitions/InternalError"
+      security:
+        - OAuth2: []
+        - userNamePassWord: []
+  /webhooks/{webhook-id}/deactivate:
+    post:
+      tags:
+      - "webhook lifecycle"
+      summary: "Deactivate a webhook"
+      operationId: "deactivateWebhook"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: path
+        name: webhook-id
+        description: "id of the webhook you want to deactivate."
+        required: true
+        type: string
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Webhook"
+        "400":
+          description: "Client Error"
+          schema:
+            $ref: "#/definitions/ClientError"
+        "500":
+          description: "Internal Error"
+          schema:
+            $ref: "#/definitions/InternalError"
+      security:
+        - OAuth2: []
+        - userNamePassWord: []
+ 
+securityDefinitions:
+  userNamePassWord:
+    type: basic
+
+definitions:
+  Webhooks:
+    type: "array"
+    items:
+      $ref: "#definitions/Webhook"
+  Webhook:
+    type: "object"
+    properties:
+      WebhookId:
+        type: "string"
+        description: "Id of the webhook"
+        example: "1234-1235-1236"
+      CreatedDate:
+        type: string
+        example: "01-01-2021"
+        description: The date at which the webhook was created.
+      UpdatedDate:
+        type: string
+        example: "01-01-2021"
+        description: The date at which the webhook was updated.
+      Name:
+        type: "string"
+        description: "Name of your webhook"
+        example: "MyNewWebhook"
+      Description:
+        type: "string"
+        description: "Description of your webhook"
+        example: "This is my first webhook."
+      Status:
+        type: "string"
+        description: "Status of your webhook"
+        example: "Unverified"
+        enum:
+        - 'Unverified'
+        - 'Inactive'
+        - 'Active'
+      Url:
+        type: "string"
+        description: "The URL of your webhook, messages will be sent to this url."
+        example: "https://myapp.mendixcloud.com/rest/webhook-consumer/v1/webhooks"
+      Events:
+        type: array
+        items:
+          type: string
+        example:
+          - 'spsresult.updated'
+          - 'user.updated'
+      EventFilters:
+        type: array
+        items: 
+          type: object
+          properties:
+            Field:
+              type: string
+              description: Field to filter on, for now only ClientId is supported.
+              example: "ClientId"
+            In:
+              type: array
+              items: 
+                type: string
+              example:
+                - 'SomeClientId'
+                - 'AnotherClientId'
+            Equals:
+              type: object
+              properties:
+                Value:
+                  type: string
+                  description: Client Id that you want to filter on.
+                  example: "MyClientId"
+      Authorization:
+        type: "object"
+        properties:
+          AuthorizationType:
+            type: "string"
+            description: "Type of authorization"
+            example: "Basic"
+            enum:
+            - 'Basic'
+            - 'Custom'
+            - 'ClientCredentials'
+          Custom:
+            type: object
+            properties:
+              Key:
+                type: "string"
+                description: "The key of the HTTP header used for the authorization."
+                example: "Authorization"
+          Basic:
+            type: object
+            properties:
+              UserName:
+                type: "string"
+                description: Username of the basic authorization.
+                example: "Username"
+          ClientCredentials:
+            type: object
+            properties:
+              ClientId:
+                type: "string"
+                description: Clientid
+                example: "CliendId"
+              TokenUrl:
+                type: "string"
+                description: Url for the token exchange.
+                example: "someURL"
+              Authentication:
+                type: "string"
+                description: Indicates how the client id and secret should be exchanged for a token.
+                example: "Body"
+                enum:
+                - 'Body'
+                - 'BasicAuthHeader'
+              Scopes:
+                type: array
+                items:
+                  type: string
+                example:
+                  - 'scopeOne'
+                  - 'scopeTwo'
+  WebhookInput:
+    type: "object"
+    properties:
+      Name:
+        type: "string"
+        description: "Name of your webhook"
+        example: "MyNewWebhook"
+      Description:
+        type: "string"
+        description: "Description of your webhook"
+        example: "This is my first webhook."
+      Url:
+        type: "string"
+        description: "The URL of your webhook, messages will be sent to this url."
+        example: "https://myapp.mendixcloud.com/rest/webhook-consumer/v1/webhooks"
+      Events:
+        type: array
+        items:
+          type: string
+        example:
+          - 'eventOne'
+          - 'eventTwo'
+      EventFilters:
+        type: array
+        items: 
+          type: object
+          properties:
+            Field:
+              type: string
+              description: Field to filter on, will be different per implementation.
+              example: "ClientId"
+            In:
+              type: array
+              items: 
+                type: string
+              example:
+                - 'SomeClientId'
+                - 'AnotherClientId'
+            Equals:
+              type: object
+              properties:
+                Value:
+                  type: string
+                  description: Client Id that you want to filter on.
+                  example: "MyClientId"
+      Authorization:
+        type: "object"
+        properties:
+          AuthorizationType:
+            type: "string"
+            description: "Type of authorization"
+            example: "Basic"
+            enum:
+            - 'Basic'
+            - 'Custom'
+            - 'ClientCredentials'
+          Custom:
+            type: object
+            properties:
+              Key:
+                type: "string"
+                description: "The key of the HTTP header used for the authorization."
+                example: "Authorization"
+              Value:
+                type: "string"
+                description: "Value to be put in the HTTP header."
+                example: "Basic YWRtaW46c3VwZXJzZWNyZXQ="
+          Basic:
+            type: object
+            properties:
+              UserName:
+                type: "string"
+                description: Username of the basic authorization.
+                example: "Username"
+              Password:
+                type: "string"
+                description: Password for basic authorization.
+                example: Password"
+          ClientCredentials:
+            type: object
+            properties:
+              ClientId:
+                type: "string"
+                description: Clientid
+                example: "CliendId"
+              ClientSecret:
+                type: "string"
+                description: Client secret.
+                example: "Client scret."
+              TokenUrl:
+                type: "string"
+                description: Url for the token exchange.
+                example: "someURL"
+              Authentication:
+                type: "string"
+                description: Indicates how the client id and secret should be exchanged for a token.
+                example: "Body"
+                enum:
+                - 'Body'
+                - 'BasicAuthHeader'
+              Scopes:
+                type: array
+                items:
+                  type: string
+                example:
+                  - 'scopeOne'
+                  - 'scopeTwo'
+  ClientError:
+    xml:
+      name: output
+    type: object
+    properties:
+      Status:
+        description: HTTP status code
+        example: 400
+        type: integer
+      Error:
+        type: object
+        properties:
+          Code: 
+            description: Unique error code.
+            example: 1001
+            type: integer
+          Error:
+            description: Indicates the type of error.
+            example: "Missing Parameter"
+            type: string
+          Message:
+            description: More information about the error
+            example: "No Id supplied"
+            type: string
+  InternalError:
+    xml:
+      name: output
+    type: object
+    properties:
+      Status:
+        description: HTTP status code
+        example: 500
+        type: integer
+      Error:
+        type: object
+        properties:
+          Code: 
+            description: Unique error code.
+            example: 1002
+            type: integer
+          Error:
+            description: Indicates the type of error.
+            example: "Parsing Error"
+            type: string
+          Message:
+            description: More information about the error
+            example: "Failed to parse to JSON"
+            type: string
